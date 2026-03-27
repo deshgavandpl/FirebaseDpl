@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
 <head>
@@ -857,6 +857,17 @@
                             <p id="auction-player-price" class="text-3xl font-bold text-emerald-400">---</p>
                         </div>
 
+                        <div class="grid grid-cols-2 gap-3 mb-6 text-left">
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p>
+                                <p id="auction-current-bid" class="mt-2 text-xl font-black text-white">Rs 0</p>
+                            </div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Leading Team</p>
+                                <p id="auction-leading-team" class="mt-2 text-xl font-black text-amber-300">No bids yet</p>
+                            </div>
+                        </div>
+
                         <!-- Button is now always visible for browsing -->
                         <button id="btn-skip-player" onclick="nextAuctionPlayer()"
                             class="btn-secondary w-full py-3 text-slate-900">Skip / Next Player →</button>
@@ -865,8 +876,13 @@
 
                 <!-- Assignment Actions -->
                 <div class="lg:col-span-2 clean-card p-4 sm:p-6 flex flex-col">
-                    <h3 class="font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Assign to Franchise
-                        (Winning Bid)</h3>
+                    <div class="flex flex-col gap-3 mb-4 border-b border-slate-100 pb-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <h3 class="font-bold text-slate-900">Live Auction Board</h3>
+                            <span id="auction-status-pill" class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-amber-700">STANDBY</span>
+                        </div>
+                        <p id="auction-status-copy" class="text-sm text-slate-500">Admin has not started the auction yet.</p>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-8" id="auction-team-buttons">
                         <!-- Populated dynamically based on Admin Access -->
                     </div>
@@ -1303,7 +1319,7 @@
         <!-- VIEW: ADMIN PANEL (GEN-Z REDESIGN)         -->
         <!-- ========================================== -->
         <div id="view-admin" class="app-view">
-            <div class="max-w-md mx-auto mt-10">
+            <div class="max-w-6xl mx-auto mt-10">
                 <div class="text-center mb-10">
                     <div
                         class="w-20 h-20 bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.3)] transform rotate-3 mb-6 hover:rotate-6 transition-transform">
@@ -1316,8 +1332,9 @@
                     </p>
                 </div>
 
-                <div
-                    class="clean-card bg-[#0a192f] border border-red-500/30 p-6 sm:p-8 shadow-[0_10px_40px_rgba(220,38,38,0.15)] relative overflow-hidden group">
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div
+                        class="clean-card bg-[#0a192f] border border-red-500/30 p-6 sm:p-8 shadow-[0_10px_40px_rgba(220,38,38,0.15)] relative overflow-hidden group">
                     <!-- Background ambient glow -->
                     <div
                         class="absolute top-0 right-0 w-64 h-64 bg-red-600/10 rounded-full blur-3xl pointer-events-none group-hover:bg-red-600/20 transition-colors duration-500">
@@ -1367,6 +1384,58 @@
                                     class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> Approve Roster
                                 Changes</li>
                         </ul>
+                    </div>
+                    </div>
+
+                    <div class="clean-card bg-white border border-blue-100 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                        <div class="absolute -top-14 -right-10 h-40 w-40 rounded-full bg-blue-100 blur-3xl opacity-70"></div>
+                        <div class="relative z-10">
+                            <div class="mb-6">
+                                <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-2xl font-black text-white shadow-lg">5</div>
+                                <h3 class="mt-4 text-3xl font-black uppercase tracking-tight text-slate-900">Team Owner Login</h3>
+                                <p class="mt-2 text-sm font-medium text-slate-500">Each owner gets one hidden bidding room. Use team name, owner name, mobile number, and minimum 4 digit password.</p>
+                            </div>
+
+                            <form id="owner-login-form" onsubmit="handleOwnerLogin(event)" class="space-y-4">
+                                <div>
+                                    <label class="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">Team</label>
+                                    <select id="owner-team" required class="clean-input bg-slate-50 text-sm">
+                                        <option value="">Select team</option>
+                                        <option value="AP11">AP11</option>
+                                        <option value="Cotton11">Cotton11</option>
+                                        <option value="Balkrushna11">Balkrushna11</option>
+                                        <option value="Ajinkya Classes11">Ajinkya Classes11</option>
+                                        <option value="Ankushraj11">Ankushraj11</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">Owner Name</label>
+                                    <input type="text" id="owner-name" required class="clean-input bg-slate-50 text-sm" placeholder="Enter owner name">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">Mobile Number</label>
+                                    <input type="tel" id="owner-mobile" required class="clean-input bg-slate-50 text-sm" placeholder="Enter owner mobile">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">Password</label>
+                                    <input type="password" id="owner-password" required minlength="4" pattern="[0-9]{4,}" class="clean-input bg-slate-50 text-sm" placeholder="Minimum 4 digits">
+                                </div>
+                                <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-4 text-sm font-black uppercase tracking-[0.2em] text-white shadow-lg transition-transform hover:-translate-y-0.5">
+                                    Enter Hidden Team Room
+                                </button>
+                            </form>
+
+                            <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                <p class="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Default Owner Credentials</p>
+                                <div class="mt-3 grid gap-2 text-xs text-slate-600 sm:grid-cols-2">
+                                    <div class="rounded-xl border border-slate-200 bg-white p-3"><span class="block font-black text-slate-900">AP11</span>Atish Palwe | 9000000001 | 1111</div>
+                                    <div class="rounded-xl border border-slate-200 bg-white p-3"><span class="block font-black text-slate-900">Cotton11</span>Bhagwat Dole | 9000000002 | 2222</div>
+                                    <div class="rounded-xl border border-slate-200 bg-white p-3"><span class="block font-black text-slate-900">Balkrushna11</span>Mukund Huse | 9000000003 | 3333</div>
+                                    <div class="rounded-xl border border-slate-200 bg-white p-3"><span class="block font-black text-slate-900">Ajinkya Classes11</span>Ajinkya Dhakane Sir | 9000000004 | 4444</div>
+                                    <div class="rounded-xl border border-slate-200 bg-white p-3 sm:col-span-2"><span class="block font-black text-slate-900">Ankushraj11</span>Yogesh Huse Sir | 9000000005 | 5555</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1563,6 +1632,92 @@
 
         </div>
 
+        <div id="view-adminauction" class="app-view">
+            <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.25em] text-red-500">Hidden Admin Room</p>
+                    <h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">Auction Command Desk</h1>
+                    <p class="mt-2 text-sm text-slate-500">Start the round, watch owner bids in real time, then sell the player to the highest bidder.</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Open Public Screen</button>
+                    <button onclick="navigateTo('adminpanel')" class="btn-secondary px-4 py-3 text-sm">Open Control Center</button>
+                    <button onclick="handleAdminLogout()" class="rounded-xl bg-red-600 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button>
+                </div>
+            </div>
+
+            <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+                <div class="clean-card bg-slate-900 p-6 text-white">
+                    <p class="text-xs font-black uppercase tracking-[0.25em] text-slate-400">Round <span id="admin-auction-round">0</span></p>
+                    <h2 id="admin-auction-player" class="mt-4 text-4xl font-black uppercase tracking-tight">Waiting for admin</h2>
+                    <p id="admin-auction-role" class="mt-2 text-blue-300">Auction paused</p>
+                    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p>
+                            <p id="admin-auction-bid" class="mt-2 text-3xl font-black text-emerald-300">Rs 0</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Leading Team</p>
+                            <p id="admin-auction-leader" class="mt-2 text-3xl font-black text-amber-300">No bids yet</p>
+                        </div>
+                    </div>
+                    <p id="admin-auction-status" class="mt-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">Admin has not started the auction yet.</p>
+                </div>
+
+                <div class="grid gap-4">
+                    <div class="clean-card p-6">
+                        <p class="text-xs font-black uppercase tracking-[0.25em] text-slate-500">Controls</p>
+                        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                            <button onclick="adminStartAuction()" class="rounded-xl bg-emerald-600 px-4 py-4 text-sm font-black uppercase tracking-[0.2em] text-white">Start Auction</button>
+                            <button onclick="adminSkipAuctionPlayer()" class="rounded-xl bg-slate-900 px-4 py-4 text-sm font-black uppercase tracking-[0.2em] text-white">Next Player</button>
+                            <button onclick="adminSellCurrentPlayer()" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black uppercase tracking-[0.2em] text-white">Sell Player</button>
+                        </div>
+                    </div>
+                    <div class="clean-card p-6">
+                        <p class="text-xs font-black uppercase tracking-[0.25em] text-slate-500">Live Owner Activity</p>
+                        <div id="admin-auction-log" class="mt-4 flex h-72 flex-col gap-2 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-owner-ap11" class="app-view">
+            <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.25em] text-blue-500">Hidden Team Room</p>
+                    <h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">AP11 Owner Room</h1>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Public Screen</button>
+                    <button onclick="handleOwnerLogout()" class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button>
+                </div>
+            </div>
+            <div class="clean-card p-6">
+                <p id="owner-ap11-status" class="text-sm text-slate-500">Waiting for admin.</p>
+                <h2 id="owner-ap11-player" class="mt-4 text-4xl font-black uppercase tracking-tight text-slate-900">Waiting for admin</h2>
+                <p id="owner-ap11-role" class="mt-2 text-blue-600">Auction paused</p>
+                <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p><p id="owner-ap11-bid" class="mt-2 text-3xl font-black text-slate-900">Rs 0</p></div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Room Status</p><p id="owner-ap11-leader" class="mt-2 text-3xl font-black text-emerald-600">No bids yet</p></div>
+                </div>
+                <div class="mt-6 grid gap-3 sm:grid-cols-5">
+                    <button data-owner-bid onclick="submitOwnerBid('AP11', 10)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+10</button>
+                    <button data-owner-bid onclick="submitOwnerBid('AP11', 20)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+20</button>
+                    <button data-owner-bid onclick="submitOwnerBid('AP11', 50)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+50</button>
+                    <button data-owner-bid onclick="submitOwnerBid('AP11', 100)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+100</button>
+                    <button data-owner-bid onclick="ownerPassBid('AP11')" class="rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm font-black text-slate-700">Pass</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-owner-cotton11" class="app-view"><div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-blue-500">Hidden Team Room</p><h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">Cotton11 Owner Room</h1></div><div class="flex gap-3"><button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Public Screen</button><button onclick="handleOwnerLogout()" class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button></div></div><div class="clean-card p-6"><p id="owner-cotton11-status" class="text-sm text-slate-500">Waiting for admin.</p><h2 id="owner-cotton11-player" class="mt-4 text-4xl font-black uppercase tracking-tight text-slate-900">Waiting for admin</h2><p id="owner-cotton11-role" class="mt-2 text-blue-600">Auction paused</p><div class="mt-6 grid gap-4 sm:grid-cols-2"><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p><p id="owner-cotton11-bid" class="mt-2 text-3xl font-black text-slate-900">Rs 0</p></div><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Room Status</p><p id="owner-cotton11-leader" class="mt-2 text-3xl font-black text-emerald-600">No bids yet</p></div></div><div class="mt-6 grid gap-3 sm:grid-cols-5"><button data-owner-bid onclick="submitOwnerBid('Cotton11', 10)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+10</button><button data-owner-bid onclick="submitOwnerBid('Cotton11', 20)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+20</button><button data-owner-bid onclick="submitOwnerBid('Cotton11', 50)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+50</button><button data-owner-bid onclick="submitOwnerBid('Cotton11', 100)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+100</button><button data-owner-bid onclick="ownerPassBid('Cotton11')" class="rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm font-black text-slate-700">Pass</button></div></div></div>
+
+        <div id="view-owner-balkrushna11" class="app-view"><div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-blue-500">Hidden Team Room</p><h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">Balkrushna11 Owner Room</h1></div><div class="flex gap-3"><button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Public Screen</button><button onclick="handleOwnerLogout()" class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button></div></div><div class="clean-card p-6"><p id="owner-balkrushna11-status" class="text-sm text-slate-500">Waiting for admin.</p><h2 id="owner-balkrushna11-player" class="mt-4 text-4xl font-black uppercase tracking-tight text-slate-900">Waiting for admin</h2><p id="owner-balkrushna11-role" class="mt-2 text-blue-600">Auction paused</p><div class="mt-6 grid gap-4 sm:grid-cols-2"><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p><p id="owner-balkrushna11-bid" class="mt-2 text-3xl font-black text-slate-900">Rs 0</p></div><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Room Status</p><p id="owner-balkrushna11-leader" class="mt-2 text-3xl font-black text-emerald-600">No bids yet</p></div></div><div class="mt-6 grid gap-3 sm:grid-cols-5"><button data-owner-bid onclick="submitOwnerBid('Balkrushna11', 10)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+10</button><button data-owner-bid onclick="submitOwnerBid('Balkrushna11', 20)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+20</button><button data-owner-bid onclick="submitOwnerBid('Balkrushna11', 50)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+50</button><button data-owner-bid onclick="submitOwnerBid('Balkrushna11', 100)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+100</button><button data-owner-bid onclick="ownerPassBid('Balkrushna11')" class="rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm font-black text-slate-700">Pass</button></div></div></div>
+
+        <div id="view-owner-ajinkyaclasses11" class="app-view"><div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-blue-500">Hidden Team Room</p><h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">Ajinkya Classes11 Owner Room</h1></div><div class="flex gap-3"><button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Public Screen</button><button onclick="handleOwnerLogout()" class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button></div></div><div class="clean-card p-6"><p id="owner-ajinkyaclasses11-status" class="text-sm text-slate-500">Waiting for admin.</p><h2 id="owner-ajinkyaclasses11-player" class="mt-4 text-4xl font-black uppercase tracking-tight text-slate-900">Waiting for admin</h2><p id="owner-ajinkyaclasses11-role" class="mt-2 text-blue-600">Auction paused</p><div class="mt-6 grid gap-4 sm:grid-cols-2"><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p><p id="owner-ajinkyaclasses11-bid" class="mt-2 text-3xl font-black text-slate-900">Rs 0</p></div><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Room Status</p><p id="owner-ajinkyaclasses11-leader" class="mt-2 text-3xl font-black text-emerald-600">No bids yet</p></div></div><div class="mt-6 grid gap-3 sm:grid-cols-5"><button data-owner-bid onclick="submitOwnerBid('Ajinkya Classes11', 10)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+10</button><button data-owner-bid onclick="submitOwnerBid('Ajinkya Classes11', 20)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+20</button><button data-owner-bid onclick="submitOwnerBid('Ajinkya Classes11', 50)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+50</button><button data-owner-bid onclick="submitOwnerBid('Ajinkya Classes11', 100)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+100</button><button data-owner-bid onclick="ownerPassBid('Ajinkya Classes11')" class="rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm font-black text-slate-700">Pass</button></div></div></div>
+
+        <div id="view-owner-ankushraj11" class="app-view"><div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-blue-500">Hidden Team Room</p><h1 class="mt-2 text-3xl font-black uppercase tracking-tight text-slate-900">Ankushraj11 Owner Room</h1></div><div class="flex gap-3"><button onclick="navigateTo('auction')" class="btn-secondary px-4 py-3 text-sm">Public Screen</button><button onclick="handleOwnerLogout()" class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-white">Logout</button></div></div><div class="clean-card p-6"><p id="owner-ankushraj11-status" class="text-sm text-slate-500">Waiting for admin.</p><h2 id="owner-ankushraj11-player" class="mt-4 text-4xl font-black uppercase tracking-tight text-slate-900">Waiting for admin</h2><p id="owner-ankushraj11-role" class="mt-2 text-blue-600">Auction paused</p><div class="mt-6 grid gap-4 sm:grid-cols-2"><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Current Bid</p><p id="owner-ankushraj11-bid" class="mt-2 text-3xl font-black text-slate-900">Rs 0</p></div><div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Room Status</p><p id="owner-ankushraj11-leader" class="mt-2 text-3xl font-black text-emerald-600">No bids yet</p></div></div><div class="mt-6 grid gap-3 sm:grid-cols-5"><button data-owner-bid onclick="submitOwnerBid('Ankushraj11', 10)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+10</button><button data-owner-bid onclick="submitOwnerBid('Ankushraj11', 20)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+20</button><button data-owner-bid onclick="submitOwnerBid('Ankushraj11', 50)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+50</button><button data-owner-bid onclick="submitOwnerBid('Ankushraj11', 100)" class="rounded-xl bg-blue-600 px-4 py-4 text-sm font-black text-white">+100</button><button data-owner-bid onclick="ownerPassBid('Ankushraj11')" class="rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm font-black text-slate-700">Pass</button></div></div></div>
+
     </main>
 
     <!-- Footer -->
@@ -1614,10 +1769,25 @@
             registeredPlayers: [], // Stores new registrations during this session
             allPlayers: [], // Stores the full database list for admin data extract
             loggedInPlayer: null,
+            currentOwnerTeam: null,
+            currentOwnerProfile: null,
             selectedUnassignedPlayers: [],
             auctionIndex: 0,
             chartInitialized: false,
             isAdmin: false, // Tracks if user has unlocked the admin panel
+            auctionDesk: {
+                started: false,
+                round: 0,
+                currentPlayerId: '',
+                currentPlayerName: 'Waiting for admin',
+                currentPlayerRole: 'Auction paused',
+                baseBid: 0,
+                currentBid: 0,
+                leadingTeam: '',
+                statusText: 'Admin has not started the auction yet.',
+                log: ['System ready. Waiting for admin to start the auction.'],
+                updatedAt: 0
+            },
             liveScore: {
                 team1: 'AP11',
                 score1: '112/4 (8.2 ov)',
@@ -1639,9 +1809,25 @@
             appId: '1:999558276465:web:c1ac8403ec19ae637442d0'
         };
 
+        const OWNER_ACCOUNTS = {
+            'AP11': { ownerName: 'Atish Palwe', mobile: '9000000001', password: '1111' },
+            'Cotton11': { ownerName: 'Bhagwat Dole', mobile: '9000000002', password: '2222' },
+            'Balkrushna11': { ownerName: 'Mukund Huse', mobile: '9000000003', password: '3333' },
+            'Ajinkya Classes11': { ownerName: 'Ajinkya Dhakane Sir', mobile: '9000000004', password: '4444' },
+            'Ankushraj11': { ownerName: 'Yogesh Huse Sir', mobile: '9000000005', password: '5555' }
+        };
+        const OWNER_VIEW_IDS = {
+            'AP11': 'owner-ap11',
+            'Cotton11': 'owner-cotton11',
+            'Balkrushna11': 'owner-balkrushna11',
+            'Ajinkya Classes11': 'owner-ajinkyaclasses11',
+            'Ankushraj11': 'owner-ankushraj11'
+        };
+
         let firebaseDb = null;
         let firebasePlayersRef = null;
         let firebaseLiveScoreRef = null;
+        let firebaseAuctionDeskRef = null;
         let firebaseListenersAttached = false;
         let firebaseSetupPromptShown = false;
 
@@ -1659,6 +1845,7 @@
                 firebaseDb = firebase.database();
                 firebasePlayersRef = firebaseDb.ref('players');
                 firebaseLiveScoreRef = firebaseDb.ref('liveScore');
+                firebaseAuctionDeskRef = firebaseDb.ref('auctionDesk');
                 return true;
             } catch (error) {
                 console.error('Firebase initialization failed:', error);
@@ -1733,6 +1920,86 @@
             return null;
         }
 
+        function createDefaultAuctionDesk() {
+            return {
+                started: false,
+                round: 0,
+                currentPlayerId: '',
+                currentPlayerName: 'Waiting for admin',
+                currentPlayerRole: 'Auction paused',
+                baseBid: 0,
+                currentBid: 0,
+                leadingTeam: '',
+                statusText: 'Admin has not started the auction yet.',
+                log: ['System ready. Waiting for admin to start the auction.'],
+                updatedAt: Date.now()
+            };
+        }
+
+        function parseBidAmount(value) {
+            const digits = Number((value || '').toString().replace(/[^\d]/g, ''));
+            return Number.isFinite(digits) && digits > 0 ? digits : 10;
+        }
+
+        function formatBidAmount(value) {
+            const safe = Number(value) || 0;
+            return `Rs ${safe}`;
+        }
+
+        function getAuctionPlayerById(playerId) {
+            if (!playerId) return null;
+            return state.unassigned.find(player => player.id === playerId) || null;
+        }
+
+        function getAuctionCandidatePlayer() {
+            const activePlayer = getAuctionPlayerById(state.auctionDesk.currentPlayerId);
+            if (activePlayer) return activePlayer;
+            if (state.unassigned.length === 0) return null;
+            if (state.auctionIndex >= state.unassigned.length) state.auctionIndex = 0;
+            return state.unassigned[state.auctionIndex] || state.unassigned[0];
+        }
+
+        function buildAuctionDeskFromPlayer(player, options = {}) {
+            if (!player) {
+                return {
+                    ...createDefaultAuctionDesk(),
+                    statusText: 'No unassigned players left in the auction pool.',
+                    log: ['Auction pool empty.']
+                };
+            }
+
+            const baseBid = parseBidAmount(player.price);
+            const started = options.started !== undefined ? options.started : false;
+            const round = options.round !== undefined ? options.round : (state.auctionDesk.round || 0) + 1;
+            const statusText = options.statusText || (started
+                ? `Live bidding started for ${formatName(player.name)}.`
+                : `Next player ready: ${formatName(player.name)}.`);
+            const logEntry = options.logEntry || `Desk prepared for ${formatName(player.name)} at ${formatBidAmount(baseBid)}.`;
+
+            return {
+                started,
+                round,
+                currentPlayerId: player.id || '',
+                currentPlayerName: formatName(player.name),
+                currentPlayerRole: player.role || 'Player',
+                baseBid,
+                currentBid: baseBid,
+                leadingTeam: '',
+                statusText,
+                log: appendAuctionLog(state.auctionDesk.log, logEntry),
+                updatedAt: Date.now()
+            };
+        }
+
+        function getOwnerViewId(teamName) {
+            return OWNER_VIEW_IDS[teamName] || null;
+        }
+
+        function appendAuctionLog(existingLog, entry) {
+            const next = [entry, ...(Array.isArray(existingLog) ? existingLog : [])];
+            return next.slice(0, 12);
+        }
+
         function attachFirebaseListeners() {
             if (!ensureFirebaseReady('sync live data') || firebaseListenersAttached) return;
 
@@ -1751,6 +2018,17 @@
                 applyLiveScoreState();
             }, (error) => {
                 console.error('Firebase live score sync failed:', error);
+            });
+
+            firebaseAuctionDeskRef.on('value', (snapshot) => {
+                const value = snapshot.val();
+                state.auctionDesk = value ? { ...createDefaultAuctionDesk(), ...value } : createDefaultAuctionDesk();
+                renderAuctionPlayer();
+                renderAuctionButtons();
+                renderAdminAuctionRoom();
+                renderOwnerAuctionRooms();
+            }, (error) => {
+                console.error('Firebase auction desk sync failed:', error);
             });
 
             firebaseListenersAttached = true;
@@ -1851,6 +2129,8 @@
             if (viewId === 'live') applyLiveScoreState();
             if (viewId === 'stats' && !state.chartInitialized) renderChart();
             if (viewId === 'adminpanel') { syncDataFromFirebase().then(() => renderAdminPanel()); }
+            if (viewId === 'adminauction') { syncDataFromFirebase().then(() => renderAdminAuctionRoom()); }
+            if (viewId.startsWith('owner-')) { syncDataFromFirebase().then(() => renderOwnerAuctionRooms()); }
 
             // Hub Routing Logic (Direct to Dashboard if logged in)
             if (viewId === 'hub') {
@@ -1955,15 +2235,41 @@
 
         // --- 4. Auction System Logic ---
         function renderAuctionPlayer() {
-            const player = state.unassigned[state.auctionIndex];
+            const player = getAuctionPlayerById(state.auctionDesk.currentPlayerId) || getAuctionCandidatePlayer();
+            const nameEl = document.getElementById('auction-player-name');
+            const roleEl = document.getElementById('auction-player-role');
+            const priceEl = document.getElementById('auction-player-price');
+            const bidEl = document.getElementById('auction-current-bid');
+            const leaderEl = document.getElementById('auction-leading-team');
+            const statusEl = document.getElementById('auction-status-copy');
+            const pillEl = document.getElementById('auction-status-pill');
+            const logEl = document.getElementById('auction-log');
+
             if (player) {
-                document.getElementById('auction-player-name').innerText = player.name;
-                document.getElementById('auction-player-role').innerText = player.role;
-                document.getElementById('auction-player-price').innerText = player.price;
+                if (nameEl) nameEl.innerText = formatName(player.name);
+                if (roleEl) roleEl.innerText = player.role || 'Player';
+                if (priceEl) priceEl.innerText = formatBidAmount(state.auctionDesk.baseBid || parseBidAmount(player.price));
             } else {
-                document.getElementById('auction-player-name').innerText = "Pool Empty";
-                document.getElementById('auction-player-role').innerText = "All players auctioned.";
-                document.getElementById('auction-player-price').innerText = "---";
+                if (nameEl) nameEl.innerText = 'Pool Empty';
+                if (roleEl) roleEl.innerText = 'All players auctioned.';
+                if (priceEl) priceEl.innerText = '---';
+            }
+
+            if (bidEl) bidEl.innerText = formatBidAmount(state.auctionDesk.currentBid || state.auctionDesk.baseBid || 0);
+            if (leaderEl) leaderEl.innerText = state.auctionDesk.leadingTeam || 'No bids yet';
+            if (statusEl) statusEl.innerText = state.auctionDesk.statusText || 'Waiting for admin.';
+            if (pillEl) {
+                pillEl.innerText = state.auctionDesk.started ? 'LIVE' : 'STANDBY';
+                pillEl.className = state.auctionDesk.started
+                    ? 'inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-emerald-700'
+                    : 'inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-amber-700';
+            }
+
+            if (logEl) {
+                const logs = Array.isArray(state.auctionDesk.log) && state.auctionDesk.log.length
+                    ? state.auctionDesk.log
+                    : ['System ready. Waiting for admin to start the auction.'];
+                logEl.innerHTML = logs.map(entry => `<div>${escapeHtml(entry)}</div>`).join('');
             }
         }
 
@@ -2026,6 +2332,203 @@
             state.auctionIndex++;
             if (state.auctionIndex >= state.unassigned.length) state.auctionIndex = 0; // wrap around
             renderAuctionPlayer();
+        }
+
+        function renderAuctionButtons() {
+            const container = document.getElementById('auction-team-buttons');
+            const skipBtn = document.getElementById('btn-skip-player');
+            if (!container) return;
+            if (skipBtn) skipBtn.classList.add('hide');
+
+            container.innerHTML = `
+                <div class="col-span-full grid gap-3 md:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Public Mode</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-700">Registered and unregistered users can only watch this live board.</p>
+                    </div>
+                    <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500">Owner Access</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-700">Owners log in from the Admin page, then enter their hidden team room.</p>
+                    </div>
+                    <div class="rounded-2xl border border-red-200 bg-red-50 p-4">
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-red-500">Admin Access</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-700">Admin starts each round, monitors bids, and sells the player to the winning team.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminAuctionRoom() {
+            const player = getAuctionPlayerById(state.auctionDesk.currentPlayerId) || getAuctionCandidatePlayer();
+            const playerEl = document.getElementById('admin-auction-player');
+            const roleEl = document.getElementById('admin-auction-role');
+            const bidEl = document.getElementById('admin-auction-bid');
+            const leaderEl = document.getElementById('admin-auction-leader');
+            const statusEl = document.getElementById('admin-auction-status');
+            const roundEl = document.getElementById('admin-auction-round');
+            const logEl = document.getElementById('admin-auction-log');
+
+            if (playerEl) playerEl.innerText = player ? formatName(player.name) : 'Pool Empty';
+            if (roleEl) roleEl.innerText = player ? (player.role || 'Player') : 'All players sold';
+            if (bidEl) bidEl.innerText = formatBidAmount(state.auctionDesk.currentBid || state.auctionDesk.baseBid || 0);
+            if (leaderEl) leaderEl.innerText = state.auctionDesk.leadingTeam || 'No bids yet';
+            if (statusEl) statusEl.innerText = state.auctionDesk.statusText || 'Waiting for admin.';
+            if (roundEl) roundEl.innerText = state.auctionDesk.round || 0;
+            if (logEl) {
+                const logs = Array.isArray(state.auctionDesk.log) ? state.auctionDesk.log : [];
+                logEl.innerHTML = logs.map(entry => `<div>${escapeHtml(entry)}</div>`).join('');
+            }
+        }
+
+        function renderOwnerAuctionRooms() {
+            Object.keys(OWNER_VIEW_IDS).forEach(teamName => {
+                const slug = OWNER_VIEW_IDS[teamName];
+                const bidEl = document.getElementById(`${slug}-bid`);
+                const playerEl = document.getElementById(`${slug}-player`);
+                const roleEl = document.getElementById(`${slug}-role`);
+                const leaderEl = document.getElementById(`${slug}-leader`);
+                const statusEl = document.getElementById(`${slug}-status`);
+                const buttons = document.querySelectorAll(`#view-${slug} [data-owner-bid]`);
+                const player = getAuctionPlayerById(state.auctionDesk.currentPlayerId) || getAuctionCandidatePlayer();
+                const isMyTurnLeading = state.auctionDesk.leadingTeam === teamName;
+                const leaderLabel = !state.auctionDesk.leadingTeam
+                    ? 'No bids yet'
+                    : (isMyTurnLeading ? 'You are leading' : 'Another team is leading');
+
+                if (playerEl) playerEl.innerText = player ? formatName(player.name) : 'Pool Empty';
+                if (roleEl) roleEl.innerText = player ? (player.role || 'Player') : 'All players sold';
+                if (bidEl) bidEl.innerText = formatBidAmount(state.auctionDesk.currentBid || state.auctionDesk.baseBid || 0);
+                if (leaderEl) leaderEl.innerText = leaderLabel;
+                if (statusEl) statusEl.innerText = state.auctionDesk.statusText || 'Waiting for admin.';
+
+                buttons.forEach(button => {
+                    button.disabled = !state.auctionDesk.started || !player || state.currentOwnerTeam !== teamName;
+                });
+            });
+        }
+
+        async function saveAuctionDesk(nextDesk) {
+            if (!ensureFirebaseReady('update auction desk')) return;
+            await firebaseAuctionDeskRef.set({
+                ...createDefaultAuctionDesk(),
+                ...nextDesk,
+                updatedAt: Date.now()
+            });
+        }
+
+        async function adminStartAuction() {
+            if (!state.isAdmin) return;
+
+            const player = getAuctionCandidatePlayer();
+            if (!player) {
+                showModal('Auction Empty', "<div class='text-center py-4'><p class='font-bold text-slate-800'>No unassigned players are left for auction.</p></div>");
+                return;
+            }
+
+            await saveAuctionDesk(buildAuctionDeskFromPlayer(player, {
+                started: true,
+                statusText: `Live bidding started for ${formatName(player.name)}.`,
+                logEntry: `Admin started round ${state.auctionDesk.round + 1} for ${formatName(player.name)} at ${formatBidAmount(parseBidAmount(player.price))}.`
+            }));
+        }
+
+        async function adminSkipAuctionPlayer() {
+            if (!state.isAdmin) return;
+            if (state.unassigned.length === 0) return;
+
+            const currentPlayer = getAuctionPlayerById(state.auctionDesk.currentPlayerId);
+            const currentIndex = currentPlayer ? state.unassigned.findIndex(player => player.id === currentPlayer.id) : state.auctionIndex;
+            const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % state.unassigned.length : 0;
+            state.auctionIndex = nextIndex;
+            const nextPlayer = state.unassigned[nextIndex];
+
+            await saveAuctionDesk(buildAuctionDeskFromPlayer(nextPlayer, {
+                started: false,
+                round: state.auctionDesk.round,
+                statusText: `Admin loaded ${formatName(nextPlayer.name)}. Start auction when ready.`,
+                logEntry: `Admin moved desk to ${formatName(nextPlayer.name)}.`
+            }));
+        }
+
+        async function adminSellCurrentPlayer() {
+            if (!state.isAdmin) return;
+            const player = getAuctionPlayerById(state.auctionDesk.currentPlayerId);
+
+            if (!player) {
+                showModal('Missing Player', "<div class='text-center py-4'><p class='font-bold text-slate-800'>No active auction player found.</p></div>");
+                return;
+            }
+
+            if (!state.auctionDesk.leadingTeam) {
+                showModal('No Winning Bid', "<div class='text-center py-4'><p class='font-bold text-slate-800'>Wait for at least one owner bid before selling this player.</p></div>");
+                return;
+            }
+
+            const finalPrice = formatBidAmount(state.auctionDesk.currentBid || state.auctionDesk.baseBid);
+            const result = await assignPlayerToTeam({ ...player, price: finalPrice }, state.auctionDesk.leadingTeam);
+            if (result.status !== 'success') {
+                showModal('Assignment Error', `<div class='text-center py-4'><p class='font-bold text-slate-800'>${result.message || 'Failed to assign player.'}</p></div>`);
+                return;
+            }
+
+            await syncDataFromFirebase();
+            setTimeout(syncDataFromFirebase, 1500);
+
+            const soldName = formatName(player.name);
+            const soldTeam = state.auctionDesk.leadingTeam;
+            const nextPlayer = getAuctionCandidatePlayer();
+
+            if (nextPlayer) {
+                await saveAuctionDesk(buildAuctionDeskFromPlayer(nextPlayer, {
+                    started: false,
+                    round: state.auctionDesk.round,
+                    statusText: `${soldName} sold to ${soldTeam} for ${finalPrice}. Start next round when ready.`,
+                    logEntry: `${soldTeam} bought ${soldName} for ${finalPrice}.`
+                }));
+            } else {
+                await saveAuctionDesk({
+                    ...createDefaultAuctionDesk(),
+                    statusText: `${soldName} sold to ${soldTeam} for ${finalPrice}. Auction complete.`,
+                    log: [`${soldTeam} bought ${soldName} for ${finalPrice}.`, 'Auction complete.']
+                });
+            }
+        }
+
+        async function submitOwnerBid(teamName, increment) {
+            if (!state.currentOwnerTeam || state.currentOwnerTeam !== teamName) return;
+            if (!ensureFirebaseReady('place owner bid')) return;
+
+            await firebaseAuctionDeskRef.transaction((current) => {
+                const desk = current ? { ...createDefaultAuctionDesk(), ...current } : createDefaultAuctionDesk();
+                if (!desk.started || !desk.currentPlayerId) return desk;
+
+                const nextBid = Number(desk.currentBid || desk.baseBid || 0) + Number(increment || 0);
+                const entry = `${teamName} raised bid to ${formatBidAmount(nextBid)}.`;
+
+                return {
+                    ...desk,
+                    currentBid: nextBid,
+                    leadingTeam: teamName,
+                    statusText: `${teamName} is currently leading at ${formatBidAmount(nextBid)}.`,
+                    log: appendAuctionLog(desk.log, entry),
+                    updatedAt: Date.now()
+                };
+            });
+        }
+
+        async function ownerPassBid(teamName) {
+            if (!state.currentOwnerTeam || state.currentOwnerTeam !== teamName) return;
+            if (!ensureFirebaseReady('pass owner turn')) return;
+
+            await firebaseAuctionDeskRef.transaction((current) => {
+                const desk = current ? { ...createDefaultAuctionDesk(), ...current } : createDefaultAuctionDesk();
+                const entry = `${teamName} passed on the current call.`;
+                return {
+                    ...desk,
+                    log: appendAuctionLog(desk.log, entry),
+                    updatedAt: Date.now()
+                };
+            });
         }
 
         // --- 5. Modal & Form Logic ---
@@ -2323,6 +2826,8 @@
             renderTeams();
             renderAuctionPlayer();
             renderAuctionButtons();
+            renderAdminAuctionRoom();
+            renderOwnerAuctionRooms();
             syncLoggedInPlayerDashboard();
             // If admin panel is active, refresh it too
             if (document.getElementById('view-adminpanel') && document.getElementById('view-adminpanel').classList.contains('active-view')) {
@@ -2359,6 +2864,21 @@
                 }
             } catch (error) {
                 console.error('Initial live score fetch failed:', error);
+            }
+
+            try {
+                const auctionDeskSnapshot = await firebaseAuctionDeskRef.once('value');
+                if (auctionDeskSnapshot.exists()) {
+                    state.auctionDesk = { ...createDefaultAuctionDesk(), ...auctionDeskSnapshot.val() };
+                } else {
+                    state.auctionDesk = createDefaultAuctionDesk();
+                }
+                renderAuctionPlayer();
+                renderAuctionButtons();
+                renderAdminAuctionRoom();
+                renderOwnerAuctionRooms();
+            } catch (error) {
+                console.error('Initial auction desk fetch failed:', error);
             }
         }
 
@@ -2668,6 +3188,81 @@
             navigateTo('admin');
 
             showModal("Logged Out", "<div class='text-center py-4'><span class='text-5xl mb-4 block'>🔒</span><h3 class='font-bold text-slate-800 text-xl'>Session Terminated</h3><p class='text-slate-600 mt-2'>You have been securely logged out.</p></div>");
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-username').value;
+            const pass = document.getElementById('admin-password').value;
+
+            if (user === 'dpl' && pass === '431202') {
+                state.isAdmin = true;
+                state.currentOwnerTeam = null;
+                state.currentOwnerProfile = null;
+
+                document.getElementById('admin-login-form').classList.add('hide');
+                document.getElementById('admin-logged-in').classList.remove('hide');
+
+                setTimeout(() => {
+                    navigateTo('adminauction');
+                    renderAdminAuctionRoom();
+                }, 800);
+            } else {
+                showModal("Access Denied", "<div class='text-center py-4'><p class='font-bold text-red-600 text-lg'>Invalid Admin ID or Password.</p></div>");
+            }
+            e.target.reset();
+        }
+
+        function handleOwnerLogin(e) {
+            e.preventDefault();
+            const teamName = document.getElementById('owner-team').value;
+            const ownerName = document.getElementById('owner-name').value.trim().toLowerCase();
+            const mobile = document.getElementById('owner-mobile').value.trim();
+            const password = document.getElementById('owner-password').value.trim();
+            const account = OWNER_ACCOUNTS[teamName];
+
+            if (!account) {
+                showModal('Owner Login Failed', "<div class='text-center py-4'><p class='font-bold text-slate-800'>Choose your team before continuing.</p></div>");
+                return;
+            }
+
+            const nameMatches = account.ownerName.toLowerCase() === ownerName;
+            const mobileMatches = account.mobile === mobile;
+            const passwordMatches = account.password === password && password.length >= 4;
+
+            if (!nameMatches || !mobileMatches || !passwordMatches) {
+                showModal('Owner Login Failed', "<div class='text-center py-4'><p class='font-bold text-slate-800'>Invalid owner name, mobile number, or password.</p></div>");
+                return;
+            }
+
+            state.isAdmin = false;
+            state.currentOwnerTeam = teamName;
+            state.currentOwnerProfile = { ...account, teamName };
+
+            const targetView = getOwnerViewId(teamName);
+            if (targetView) {
+                navigateTo(targetView);
+                renderOwnerAuctionRooms();
+            }
+
+            e.target.reset();
+        }
+
+        function handleAdminLogout() {
+            state.isAdmin = false;
+            state.currentOwnerTeam = null;
+            state.currentOwnerProfile = null;
+            document.getElementById('admin-login-form').classList.remove('hide');
+            document.getElementById('admin-logged-in').classList.add('hide');
+            navigateTo('admin');
+            showModal("Logged Out", "<div class='text-center py-4'><p class='font-bold text-slate-800'>Admin session closed.</p></div>");
+        }
+
+        function handleOwnerLogout() {
+            state.currentOwnerTeam = null;
+            state.currentOwnerProfile = null;
+            navigateTo('admin');
+            showModal("Logged Out", "<div class='text-center py-4'><p class='font-bold text-slate-800'>Owner session closed.</p></div>");
         }
 
         // --- Admin Panel Render Functions ---
